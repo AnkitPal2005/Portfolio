@@ -93,7 +93,7 @@ function App() {
                 <a href="https://www.linkedin.com/in/ankit-pal-971859280" target="_blank" rel="noopener noreferrer" className="social-link">
                   <FaLinkedin />
                 </a>
-                <a href="mailto:ap7032278@gmail.com" className="social-link">
+                <a href="mailto:ap70232789@gmail.com" className="social-link">
                   <FaEnvelope />
                 </a>
               </div>
@@ -413,7 +413,7 @@ function App() {
                   <FaEnvelope />
                 </div>
                 <h3>Email</h3>
-                <a href="mailto:ap7032278@gmail.com">ap7032278@gmail.com</a>
+                <a href="mailto:ap70232789@gmail.com">ap70232789@gmail.com</a>
               </div>
 
               <div className="contact-card">
@@ -445,7 +445,7 @@ function App() {
           <a href="https://www.linkedin.com/in/ankit-pal-971859280" target="_blank" rel="noopener noreferrer" className="social-link">
             <FaLinkedin />
           </a>
-          <a href="mailto:ap7032278@gmail.com" className="social-link">
+          <a href="mailto:ap70232789@gmail.com" className="social-link">
             <FaEnvelope />
           </a>
         </div>
