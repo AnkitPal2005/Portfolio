@@ -8,6 +8,7 @@ import './App.css';
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,6 +17,14 @@ function App() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+  };
 
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
@@ -36,22 +45,29 @@ function App() {
       {/* Navbar */}
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
-          <a href="#home" className="nav-logo">
+          <a href="#home" className="nav-logo" onClick={closeMobileMenu}>
             <img src="/images/AnkitImage.jpg" alt="Ankit Pal" className="nav-logo-img" />
             <span>Ankit Pal</span>
           </a>
-          <ul className="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#education">Education</a></li>
-            <li><a href="#contact">Contact</a></li>
+          <ul className={`nav-links ${mobileMenuOpen ? 'active' : ''}`}>
+            <li><a href="#home" onClick={closeMobileMenu}>Home</a></li>
+            <li><a href="#about" onClick={closeMobileMenu}>About</a></li>
+            <li><a href="#skills" onClick={closeMobileMenu}>Skills</a></li>
+            <li><a href="#projects" onClick={closeMobileMenu}>Projects</a></li>
+            <li><a href="#experience" onClick={closeMobileMenu}>Experience</a></li>
+            <li><a href="#education" onClick={closeMobileMenu}>Education</a></li>
+            <li><a href="#contact" onClick={closeMobileMenu}>Contact</a></li>
           </ul>
-          <button className="mobile-menu-btn">☰</button>
+          <button className="mobile-menu-btn" onClick={toggleMobileMenu}>
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="mobile-menu-overlay" onClick={closeMobileMenu}></div>
+      )}
 
       {/* Hero Section */}
       <section id="home" className="hero">
