@@ -7,8 +7,8 @@ import {
 } from 'react-icons/fa';
 import './App.css';
 
-// 1. High Performance Particle Canvas Background
-function CanvasParticles() {
+// 1. High Performance Starry Space Canvas Background
+function StarBackground() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -16,8 +16,8 @@ function CanvasParticles() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let animationFrameId;
-    let particles = [];
-    const particleCount = 65;
+    let stars = [];
+    const starCount = 130;
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -27,52 +27,88 @@ function CanvasParticles() {
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Create particles
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
+    // Create stars
+    for (let i = 0; i < starCount; i++) {
+      stars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        radius: Math.random() * 1.5 + 0.5,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        alpha: Math.random() * 0.4 + 0.15
+        radius: Math.random() * 1.1 + 0.3,
+        baseAlpha: Math.random() * 0.7 + 0.3,
+        twinkleSpeed: 0.01 + Math.random() * 0.03,
+        angle: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.04 + 0.015
       });
     }
 
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.lineWidth = 0.6;
+    // Shooting stars
+    let shootingStars = [];
 
-      for (let i = 0; i < particles.length; i++) {
-        const p1 = particles[i];
-        p1.x += p1.vx;
-        p1.y += p1.vy;
-
-        // Boundaries bounce
-        if (p1.x < 0 || p1.x > canvas.width) p1.vx *= -1;
-        if (p1.y < 0 || p1.y > canvas.height) p1.vy *= -1;
-
-        ctx.beginPath();
-        ctx.arc(p1.x, p1.y, p1.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(139, 92, 246, ${p1.alpha})`;
-        ctx.fill();
-
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-          if (dist < 100) {
-            ctx.beginPath();
-            ctx.moveTo(p1.x, p1.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(6, 182, 212, ${(1 - dist / 100) * 0.12})`;
-            ctx.stroke();
-          }
-        }
+    const addShootingStar = () => {
+      if (shootingStars.length < 2 && Math.random() < 0.007) {
+        shootingStars.push({
+          x: Math.random() * canvas.width * 0.6,
+          y: 0,
+          dx: Math.random() * 4 + 3,
+          dy: Math.random() * 3 + 2,
+          length: Math.random() * 80 + 40,
+          speed: Math.random() * 4 + 4,
+          alpha: 1
+        });
       }
-      animationFrameId = requestAnimationFrame(draw);
     };
 
-    draw();
+    const draw = (time) => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw background stars
+      stars.forEach(star => {
+        star.x += Math.cos(star.angle) * star.speed;
+        star.y += Math.sin(star.angle) * star.speed;
+
+        // Wrap boundaries
+        if (star.x < 0) star.x = canvas.width;
+        if (star.x > canvas.width) star.x = 0;
+        if (star.y < 0) star.y = canvas.height;
+        if (star.y > canvas.height) star.y = 0;
+
+        const currentAlpha = star.baseAlpha + Math.sin(time * star.twinkleSpeed) * 0.35;
+        const clampedAlpha = Math.max(0.1, Math.min(1, currentAlpha));
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${clampedAlpha})`;
+        ctx.fill();
+      });
+
+      // Draw shooting stars
+      addShootingStar();
+      for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const ss = shootingStars[i];
+        
+        ctx.beginPath();
+        const grad = ctx.createLinearGradient(ss.x, ss.y, ss.x - ss.dx, ss.y - ss.dy);
+        grad.addColorStop(0, `rgba(255, 255, 255, ${ss.alpha})`);
+        grad.addColorStop(1, 'rgba(139, 92, 246, 0)');
+        
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 1.5;
+        ctx.moveTo(ss.x, ss.y);
+        ctx.lineTo(ss.x - ss.dx * (ss.length / 10), ss.y - ss.dy * (ss.length / 10));
+        ctx.stroke();
+
+        ss.x += ss.dx * 1.5;
+        ss.y += ss.dy * 1.5;
+        ss.alpha -= 0.018;
+
+        if (ss.alpha <= 0 || ss.x > canvas.width || ss.y > canvas.height) {
+          shootingStars.splice(i, 1);
+        }
+      }
+
+      animationFrameId = requestAnimationFrame((t) => draw(t * 0.05));
+    };
+
+    draw(0);
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
@@ -421,8 +457,8 @@ function App() {
 
   return (
     <div className="app">
-      {/* 1. HTML5 Canvas Particles Visualizer */}
-      <CanvasParticles />
+      {/* 1. HTML5 Canvas Starfield Background */}
+      <StarBackground />
 
       {/* 2. Scroll Progress Bar at the top */}
       <motion.div className="scroll-progress" style={{ scaleX }} />
