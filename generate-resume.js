@@ -54,7 +54,7 @@ doc.fillColor('#ffffff')
    .fontSize(9)
    .text('Email: ap70232789@gmail.com   |   Phone: +91 8818065531   |   Location: Yamunanagar, Haryana', { align: 'center', spaceAfter: 4 })
    .text('GitHub: github.com/AnkitPal2005   |   LinkedIn: linkedin.com/in/ankit-pal-971859280', { align: 'center', spaceAfter: 4 })
-   .text('Portfolio: https://ankitpal-portfolio.netlify.app', { align: 'center' });
+   .text('Portfolio: https://resilient-tartufo-4cc27d.netlify.app', { align: 'center' });
 
 let y = 165;
 
